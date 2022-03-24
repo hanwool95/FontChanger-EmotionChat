@@ -36,7 +36,7 @@ function App() {
             console.log(key, value);
         }
 
-        fetch("https://api-us.faceplusplus.com/facepp/v3/detect", {
+        fetch("/image_api/facepp/v3/detect", {
           api_body,
           headers: {
             "Content-Type": "multipart/form-data"
