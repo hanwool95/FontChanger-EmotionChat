@@ -3,17 +3,42 @@ import React, {useState, useEffect, useRef} from 'react';
 import TextField from '@material-ui/core/TextField';
 import io from 'socket.io-client'
 
-import { Camera } from "expo-camera";
-
 const socket = io.connect('ws://127.0.0.1:3737');
 
 let api_keys = "api_key="+process.env.REACT_APP_KEY+"&api_secret="+process.env.REACT_APP_SECRETE
+
+let run_video_camera = () => {
+    let video = document.querySelector("#video");
+    if (navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function (stream) {
+                video.srcObject = stream;
+            })
+            .catch(function (err0r) {
+                console.log("Something went wrong!");
+            });
+    }
+    return video
+}
+
+let caputure_video = (video) => {
+    let canvas = document.querySelector("#canvas");
+    canvas.getContext('2d').drawImage(video, 0, 0, 500, 500);
+   	let image_data_url = canvas.toDataURL('image/jpeg');
+    return image_data_url
+}
 
 function App() {
 
     // useState를 활용하면 class 없이 상태와 set 선언 가능.
     const [state, setState] = useState({message:'', name:''})
     const [chat,setChat] = useState([])
+
+    // let stream = navigator.mediaDevices.getUserMedia({ video: true, audio: false});
+    // let video = document.querySelector("#video");
+    // video.srcObject = stream;
+
+
 
     useEffect(() =>{
         socket.on('clientReceiver', ({name, message, emotion})=>{
@@ -30,13 +55,16 @@ function App() {
         e.preventDefault()
         let {name, message} = state
         let emotion
+        let video = run_video_camera()
+        let base64img = caputure_video(video)
+        console.log(base64img)
 
         fetch("/image_api/facepp/v3/detect", {
           headers: {
             "Content-Type": "application/x-www-form-urlencoded"
           },
           method: "POST",
-            body: api_keys+"&image_url=https://avatars.githubusercontent.com/u/77750865?v=4" +
+            body: api_keys+"&image_base64=" + base64img +
                 "&return_attributes=emotion"
         }).then((response) => response.json()).then((data) =>
             emotion=JSON.stringify(data.faces[0].attributes.emotion)).then(() => socket.emit('serverReceiver', {name, message, emotion}))
@@ -56,6 +84,7 @@ function App() {
 
     return (
         <div className='card'>
+
             <form onSubmit={onMessageSubmit}>
                 <h1>Message</h1>
                 <div className="name-field">
@@ -80,40 +109,25 @@ function App() {
                 <h1>Chat log</h1>
                 {renderChat()}
             </div>
+        <div>
+            <video
+                    id ="video"
+                    width = "320"
+                    hegith = "500"
+                    autoPlay
+                ></video>
+        </div>
+            <div>
+                <canvas
+                    id="canvas"
+                    width = "320"
+                    hegith = {500}
+                    ></canvas>
+            </div>
         </div>
     );
 }
 
-function MyCamera() {
-    const [hasPermission, setHasPermission] = useState(null);
-    const [isCameraReady, setIsCameraReady] = useState(false);
-    const [cameraSource, setCameraSource] = useState(null);
-    const cameraRef = useRef();
 
-    useEffect(() => {
-        (async () => {
-            const { status } = await Camera.requestCameraPermissionsAsync()();
-            setHasPermission(status === "granted");
-            console.log("camera granted")
-        })();
-        }, []);
-
-    const onCameraReady = () => {
-        setIsCameraReady(true);
-    };
-
-    const takePicture = async () => {
-        console.log("takking picture")
-        const options = { quality: 0.5, base64: true, skipProcessing: true };
-        const data = await cameraRef.current.takePictureAsync(options);
-        const source = data.uri;
-        await cameraRef.current.pausePreview();
-        setCameraSource(source)
-        console.log("picture source", source);
-    };
-    return (
-        <Camera ref={cameraRef} />
-    );
-}
 
 export default App;
