@@ -57,17 +57,19 @@ function App() {
         let emotion
         let video = run_video_camera()
         let base64img = caputure_video(video)
-        console.log(base64img)
+        let splited_base64 = base64img.split(",")
+        console.log(splited_base64[1])
 
         fetch("/image_api/facepp/v3/detect", {
           headers: {
             "Content-Type": "application/x-www-form-urlencoded"
           },
           method: "POST",
-            body: api_keys+"&image_base64=" + base64img +
+            body: api_keys+"&image_base64=" + splited_base64[1] +
                 "&return_attributes=emotion"
-        }).then((response) => response.json()).then((data) =>
-            emotion=JSON.stringify(data.faces[0].attributes.emotion)).then(() => socket.emit('serverReceiver', {name, message, emotion}))
+        }).then((response) => response.json()).then((data) =>{
+            console.log(data)
+            emotion=JSON.stringify(data.faces[0].attributes.emotion)}).then(() => socket.emit('serverReceiver', {name, message, emotion}))
 
         //초기화
         setState({message : '', name})
