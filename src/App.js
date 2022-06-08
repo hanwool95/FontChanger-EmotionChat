@@ -23,7 +23,7 @@ let run_video_camera = () => {
 
 let caputure_video = (video) => {
     let canvas = document.querySelector("#canvas");
-    canvas.getContext('2d').drawImage(video, 0, 0, 500, 500);
+    canvas.getContext('2d').drawImage(video, 0, 0, 200, 150);
    	let image_data_url = canvas.toDataURL('image/jpeg');
     return image_data_url
 }
@@ -57,6 +57,7 @@ function App() {
         let emotion
         let video = run_video_camera()
         let base64img = caputure_video(video)
+        console.log(base64img)
         let splited_base64 = base64img.split(",")
         console.log(splited_base64[1])
 
@@ -86,7 +87,6 @@ function App() {
 
     return (
         <div className='card'>
-
             <form onSubmit={onMessageSubmit}>
                 <h1>Message</h1>
                 <div className="name-field">
@@ -114,18 +114,18 @@ function App() {
         <div>
             <video
                     id ="video"
-                    width = "320"
-                    hegith = "500"
+                    width = "200"
+                    hegith = "150"
                     autoPlay
                 ></video>
-        </div>
             <div>
-                <canvas
-                    id="canvas"
-                    width = "320"
-                    hegith = {500}
-                    ></canvas>
+            <canvas
+                id="canvas"
+                width = "200"
+                hegith = "150"
+                ></canvas>
             </div>
+        </div>
         </div>
     );
 }
