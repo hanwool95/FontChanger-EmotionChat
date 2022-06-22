@@ -21,7 +21,7 @@ let run_video_camera = () => {
     return video
 }
 
-let caputure_video = (video) => {
+let capture_video = (video) => {
     let canvas = document.querySelector("#canvas");
     canvas.getContext('2d').drawImage(video, 0, 0, 200, 150);
    	let image_data_url = canvas.toDataURL('image/jpeg');
@@ -56,21 +56,30 @@ function App() {
         let {name, message} = state
         let emotion
         let video = run_video_camera()
-        let base64img = caputure_video(video)
-        console.log(base64img)
-        let splited_base64 = base64img.split(",")
-        console.log(splited_base64[1])
 
-        fetch("/image_api/facepp/v3/detect", {
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-          },
-          method: "POST",
-            body: api_keys+"&image_base64=" + splited_base64[1] +
-                "&return_attributes=emotion"
-        }).then((response) => response.json()).then((data) =>{
+        const captured_img = capture_video(video)
+        console.log(captured_img)
+        let splited_base64 = captured_img.split(",")
+
+        let api_body = new FormData()
+         api_body.append("api_key", process.env.REACT_APP_KEY)
+         api_body.append("api_secret", process.env.REACT_APP_SECRETE)
+         api_body.append("image_base64", splited_base64)
+         api_body.append("return_attributes", "emotion")
+
+        fetch("/image_api/facepp/v3/detect",
+            {
+            body: api_body,
+            method: "POST",
+        })
+            .then((response) =>
+                response.json()).then((data) =>
+        {
             console.log(data)
-            emotion=JSON.stringify(data.faces[0].attributes.emotion)}).then(() => socket.emit('serverReceiver', {name, message, emotion}))
+            emotion=JSON.stringify(data.faces[0].attributes.emotion)
+        })
+            .then(() =>
+                socket.emit('serverReceiver', {name, message, emotion}))
 
         //초기화
         setState({message : '', name})
