@@ -5,8 +5,6 @@ import io from 'socket.io-client'
 
 const socket = io.connect('ws://127.0.0.1:3737');
 
-let api_keys = "api_key="+process.env.REACT_APP_KEY+"&api_secret="+process.env.REACT_APP_SECRETE
-
 let run_video_camera = () => {
     let video = document.querySelector("#video");
     if (navigator.mediaDevices.getUserMedia) {
