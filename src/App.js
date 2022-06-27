@@ -90,7 +90,7 @@ function App() {
     const renderChat = () =>{
         return chat.map(({name, message, emotion, font}, index)=>(
             <div key={index}>
-                <h3>{name}:<span>{message}</span></h3>
+                <h3>{name}:<span style={{fontFamily:font}}>{message}</span></h3>
                 <h5>{emotion}</h5>
             </div>
         ))

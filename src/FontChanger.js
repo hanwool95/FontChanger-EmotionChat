@@ -2,7 +2,7 @@ const FontChanger = {
     'anger': "Nanum Gothic",
     'disgust': "Nanum Gothic",
     'fear': "Nanum Gothic",
-    'happiness': "Nanum Gothic",
+    'happiness': 'Nanum Myengjo',
     'neutral': "Nanum Gothic",
     'sadness': "Nanum Gothic",
     'surprise': "Nanum Gothic",
@@ -33,8 +33,9 @@ const FontChanger = {
         sortable.sort((a,b) => {
             return b[1] - a[1];
         })
-
-        return this[sortable[0][0]]
+        let font = this[sortable[0][0]]
+        console.log(font)
+        return font
     }
 }
 

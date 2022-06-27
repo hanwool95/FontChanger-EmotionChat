@@ -42,6 +42,11 @@ span {
   src:url('./fonts/NanumGothicLight.otf');
 }
 
+@font-face {
+  font-family: 'Nanum Myengjo';
+  src:url('./fonts/NanumMyeongjo.otf');
+}
+
 .nanum-gothic {
   font-family: "Nanum Gothic", serif;
 }
