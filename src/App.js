@@ -1,7 +1,9 @@
 import './App.css';
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect} from 'react';
 import TextField from '@material-ui/core/TextField';
 import io from 'socket.io-client'
+
+import FontChanger from "./FontChanger";
 
 const socket = io.connect('ws://127.0.0.1:3737');
 
@@ -39,8 +41,8 @@ function App() {
 
 
     useEffect(() =>{
-        socket.on('clientReceiver', ({name, message, emotion})=>{
-            setChat([...chat,{name, message, emotion}])
+        socket.on('clientReceiver', ({name, message, emotion, font})=>{
+            setChat([...chat,{name, message, emotion, font}])
             return () => socket.disconnect()
         })
     }, [ chat ])
@@ -53,6 +55,7 @@ function App() {
         e.preventDefault()
         let {name, message} = state
         let emotion
+        let font
         let video = run_video_camera()
 
         const captured_img = capture_video(video)
@@ -75,16 +78,17 @@ function App() {
         {
             console.log(data)
             emotion=JSON.stringify(data.faces[0].attributes.emotion)
+            font = FontChanger.cacluateEmotion(emotion)
         })
             .then(() =>
-                socket.emit('serverReceiver', {name, message, emotion}))
+                socket.emit('serverReceiver', {name, message, emotion, font}))
 
         //초기화
         setState({message : '', name})
     }
 
     const renderChat = () =>{
-        return chat.map(({name, message, emotion}, index)=>(
+        return chat.map(({name, message, emotion, font}, index)=>(
             <div key={index}>
                 <h3>{name}:<span>{message}</span></h3>
                 <h5>{emotion}</h5>

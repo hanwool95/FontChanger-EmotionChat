@@ -36,3 +36,12 @@ h3 {
 span {
   color: black;
 }
+
+@font-face {
+  font-family: 'Nanum Gothic';
+  src:url('./fonts/NanumGothicLight.otf');
+}
+
+.nanum-gothic {
+  font-family: "Nanum Gothic", serif;
+}
