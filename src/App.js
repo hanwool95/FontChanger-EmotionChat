@@ -29,16 +29,11 @@ let capture_video = (video) => {
 }
 
 function App() {
-
     // useState를 활용하면 class 없이 상태와 set 선언 가능.
     const [state, setState] = useState({message:'', name:''})
     const [chat,setChat] = useState([])
 
-    // let stream = navigator.mediaDevices.getUserMedia({ video: true, audio: false});
-    // let video = document.querySelector("#video");
-    // video.srcObject = stream;
-
-
+    let video
 
     useEffect(() =>{
         socket.on('clientReceiver', ({name, message, emotion, font})=>{
@@ -46,7 +41,11 @@ function App() {
             return () => socket.disconnect()
         })
     }, [ chat ])
-//
+
+    const activateVideo = () => {
+        video = run_video_camera()
+    }
+
     // 텍스트 변환시 상태 변환.
     const onTextChange = e =>{
         setState({...state, [e.target.name]: e.target.value})
@@ -56,10 +55,9 @@ function App() {
         let {name, message} = state
         let emotion
         let font
-        let video = run_video_camera()
+        video = run_video_camera()
 
         const captured_img = capture_video(video)
-        console.log(captured_img)
         let splited_base64 = captured_img.split(",")
 
         let api_body = new FormData()
@@ -98,26 +96,31 @@ function App() {
 
     return (
         <div className='card'>
-            <form onSubmit={onMessageSubmit}>
+            <div className='form'>
+                <button onClick={activateVideo}>
+                비디오 키기
+                </button>
                 <h1>Message</h1>
-                <div className="name-field">
-                    <TextField
-                        name ="name"
-                        onChange={e=> onTextChange(e)}
-                        value={state.name}
-                        label="Name"/>
-                </div>
-                <div >
-                    <TextField
-                        name ="message"
-                        onChange={e=> onTextChange(e)}
-                        value={state.message}
-                        id="outlined-multiline-static"
-                        variant="outlined"
-                        label="Message"/>
-                </div>
-                <button>Send Message</button>
-            </form>
+                <form onSubmit={onMessageSubmit}>
+                    <div className="name-field">
+                        <TextField
+                            name ="name"
+                            onChange={e=> onTextChange(e)}
+                            value={state.name}
+                            label="Name"/>
+                    </div>
+                    <div >
+                        <TextField
+                            name ="message"
+                            onChange={e=> onTextChange(e)}
+                            value={state.message}
+                            id="outlined-multiline-static"
+                            variant="outlined"
+                            label="Message"/>
+                    </div>
+                        <button>전송</button>
+                </form>
+            </div>
             <div className="render-chat">
                 <h1>Chat log</h1>
                 {renderChat()}
@@ -129,12 +132,12 @@ function App() {
                     hegith = "150"
                     autoPlay
                 ></video>
-            <div>
-            <canvas
-                id="canvas"
-                width = "200"
-                hegith = "150"
-                ></canvas>
+            <div id="capturePicture">
+                <canvas
+                    id="canvas"
+                    width = "200"
+                    hegith = "150"
+                    ></canvas>
             </div>
         </div>
         </div>
