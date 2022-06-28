@@ -31,6 +31,8 @@ let capture_video = (video) => {
 function App() {
     // useState를 활용하면 class 없이 상태와 set 선언 가능.
     const [state, setState] = useState({message:'', name:''})
+    const [fontName, setFontName] = useState('Nanum Gothic')
+    const [emotionDict, setEmotionDict] = useState('')
     const [chat,setChat] = useState([])
 
     let video
@@ -46,15 +48,7 @@ function App() {
         video = run_video_camera()
     }
 
-    // 텍스트 변환시 상태 변환.
-    const onTextChange = e =>{
-        setState({...state, [e.target.name]: e.target.value})
-    }
-    const onMessageSubmit =(e)=>{
-        e.preventDefault()
-        let {name, message} = state
-        let emotion
-        let font
+    const activateFont = () => {
         video = run_video_camera()
 
         const captured_img = capture_video(video)
@@ -65,6 +59,9 @@ function App() {
          api_body.append("api_secret", process.env.REACT_APP_SECRETE)
          api_body.append("image_base64", splited_base64)
          api_body.append("return_attributes", "emotion")
+
+        let emotion
+        let font = fontName
 
         fetch("/image_api/facepp/v3/detect",
             {
@@ -77,19 +74,43 @@ function App() {
             console.log(data)
             emotion=JSON.stringify(data.faces[0].attributes.emotion)
             font = FontChanger.cacluateEmotion(emotion)
-        })
-            .then(() =>
-                socket.emit('serverReceiver', {name, message, emotion, font}))
+        }).then(() =>{
+            console.log("setting Font "+font)
+            setFontName(font)
+            setEmotionDict(emotion)
+        }
+        )
+
+    }
+
+    // 텍스트 변환시 상태 변환.
+    const onTextChange = e =>{
+        setState({...state, [e.target.name]: e.target.value})
+    }
+    const onMessageSubmit =(e)=>{
+        e.preventDefault()
+        let {name, message} = state
+        let emotion = emotionDict
+        let font = fontName
+
+        socket.emit('serverReceiver', {name, message, emotion, font})
 
         //초기화
         setState({message : '', name})
+    }
+
+    const renderFont = () => {
+        let message = state['message']
+        return <div>
+            <span style={{fontFamily:fontName}}>{message}</span>
+        </div>
     }
 
     const renderChat = () =>{
         return chat.map(({name, message, emotion, font}, index)=>(
             <div key={index}>
                 <h3>{name}:<span style={{fontFamily:font}}>{message}</span></h3>
-                <h5>{emotion}</h5>
+                {/*<h5>{emotion}</h5>*/}
             </div>
         ))
     }
@@ -118,7 +139,11 @@ function App() {
                             variant="outlined"
                             label="Message"/>
                     </div>
-                        <button>전송</button>
+                    <div>
+                        {renderFont()}
+                    </div>
+                    <button onClick={activateFont} type="button"> 폰트 바꾸기 </button>
+                        <button type="submit">전송</button>
                 </form>
             </div>
             <div className="render-chat">
