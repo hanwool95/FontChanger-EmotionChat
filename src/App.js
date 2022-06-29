@@ -31,7 +31,7 @@ let capture_video = (video) => {
 function App() {
     // useState를 활용하면 class 없이 상태와 set 선언 가능.
     const [state, setState] = useState({message:'', name:''})
-    const [fontName, setFontName] = useState('Nanum Gothic')
+    const [fontName, setFontName] = useState('')
     const [emotionDict, setEmotionDict] = useState('')
     const [chat,setChat] = useState([])
 
@@ -49,6 +49,12 @@ function App() {
     }
 
     const activateFont = () => {
+        let font = fontName
+        if (!!font) {
+            setFontName('')
+            return
+        }
+
         video = run_video_camera()
 
         const captured_img = capture_video(video)
@@ -61,7 +67,6 @@ function App() {
          api_body.append("return_attributes", "emotion")
 
         let emotion
-        let font = fontName
 
         fetch("/image_api/facepp/v3/detect",
             {
@@ -97,6 +102,18 @@ function App() {
 
         //초기화
         setState({message : '', name})
+    }
+
+    const renderButton = () => {
+        let text
+        if (!!fontName){
+            text = "되돌리기"
+        }
+        else {
+            text = "감정적용"
+        }
+
+        return text
     }
 
     const renderFont = () => {
@@ -142,7 +159,7 @@ function App() {
                     <div>
                         {renderFont()}
                     </div>
-                    <button onClick={activateFont} type="button"> 폰트 바꾸기 </button>
+                    <button onClick={activateFont} type="button"> {renderButton()} </button>
                         <button type="submit">전송</button>
                 </form>
             </div>
