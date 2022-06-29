@@ -101,6 +101,7 @@ function App() {
         socket.emit('serverReceiver', {name, message, emotion, font})
 
         //초기화
+        setFontName('')
         setState({message : '', name})
     }
 
