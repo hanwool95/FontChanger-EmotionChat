@@ -134,12 +134,31 @@ function App() {
 
     return (
         <div className='card'>
+            <div className="render-chat">
+                <h1>Chat log</h1>
+                {renderChat()}
+            </div>
+            <div className="video-box">
+                <video
+                        id ="video"
+                        width = "200"
+                        hegith = "150"
+                        autoPlay
+                    >
+                </video>
+                <div id="capturePicture">
+                    <canvas
+                        id="canvas"
+                        width = "200"
+                        hegith = "150"
+                        ></canvas>
+                </div>
+            </div>
             <div className='form'>
-                <button onClick={activateVideo}>
-                비디오 키기
-                </button>
-                <h1>Message</h1>
                 <form onSubmit={onMessageSubmit}>
+                    <button onClick={activateVideo} type="button">
+                        비디오 키기
+                    </button> &nbsp;&nbsp;
                     <div className="name-field">
                         <TextField
                             name ="name"
@@ -147,7 +166,8 @@ function App() {
                             value={state.name}
                             label="Name"/>
                     </div>
-                    <div >
+                    <br/>
+                    <div className="chatting-field">
                         <TextField
                             name ="message"
                             onChange={e=> onTextChange(e)}
@@ -155,33 +175,16 @@ function App() {
                             id="outlined-multiline-static"
                             variant="outlined"
                             label="Message"/>
+                            &nbsp;&nbsp;
+                        <button onClick={activateFont} type="button"> {renderButton()} </button>
+                        &nbsp;&nbsp;
+                        <button type="submit">전송</button>
                     </div>
                     <div>
                         {renderFont()}
                     </div>
-                    <button onClick={activateFont} type="button"> {renderButton()} </button>
-                        <button type="submit">전송</button>
                 </form>
             </div>
-            <div className="render-chat">
-                <h1>Chat log</h1>
-                {renderChat()}
-            </div>
-        <div>
-            <video
-                    id ="video"
-                    width = "200"
-                    hegith = "150"
-                    autoPlay
-                ></video>
-            <div id="capturePicture">
-                <canvas
-                    id="canvas"
-                    width = "200"
-                    hegith = "150"
-                    ></canvas>
-            </div>
-        </div>
         </div>
     );
 }
