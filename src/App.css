@@ -75,6 +75,31 @@ span {
   src:url('./fonts/NanumMyeongjo.otf');
 }
 
+@font-face {
+  font-family: 'Scary';
+  src:url('./fonts/DXHmchL-KSCpc-EUC-H.ttf')
+}
+
+@font-face {
+  font-family: 'Surprice';
+  src:url('./fonts/MapoHongdaeFreedom.ttf')
+}
+
+@font-face {
+  font-family: 'Angry';
+  src:url('./fonts/Dokdo-Regular.ttf')
+}
+
+@font-face {
+  font-family: 'Sad';
+  src:url('./fonts/BlackAndWhitePicture-Regular.ttf')
+}
+
+@font-face {
+  font-family: 'Happy';
+  src:url('./fonts/SingleDay-Regular.ttf')
+}
+
 .nanum-gothic {
   font-family: "Nanum Gothic", serif;
 }

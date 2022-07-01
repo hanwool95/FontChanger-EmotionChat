@@ -1,11 +1,11 @@
 const FontChanger = {
-    'anger': "Nanum Gothic",
+    'anger': "Angry",
     'disgust': "Nanum Gothic",
-    'fear': "Nanum Gothic",
-    'happiness': 'Nanum Myengjo',
+    'fear': "Scary",
+    'happiness': 'Happy',
     'neutral': "Nanum Gothic",
-    'sadness': "Nanum Gothic",
-    'surprise': "Nanum Gothic",
+    'sadness': "Sad",
+    'surprise': "Surprice",
 
     stringToDict: function(stringDict){
 
