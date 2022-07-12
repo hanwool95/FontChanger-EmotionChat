@@ -4,6 +4,7 @@ import TextField from '@material-ui/core/TextField';
 import io from 'socket.io-client'
 
 import FontChanger from "./FontChanger";
+import EmotionSize from "./EmotionSize";
 
 const socket = io.connect('ws://127.0.0.1:3737');
 
@@ -120,14 +121,14 @@ function App() {
     const renderFont = () => {
         let message = state['message']
         return <div>
-            <span style={{fontFamily:fontName}}>{message}</span>
+            <span style={{fontFamily:fontName, fontSize:EmotionSize[fontName]}}>{message}</span>
         </div>
     }
 
     const renderChat = () =>{
         return chat.map(({name, message, emotion, font}, index)=>(
             <div key={index}>
-                <h3>{name}:<span style={{fontFamily:font}}>{message}</span></h3>
+                <h3>{name}:<span style={{fontFamily:font, fontSize:EmotionSize[font]}}>{message}</span></h3>
                 {/*<h5>{emotion}</h5>*/}
             </div>
         ))
