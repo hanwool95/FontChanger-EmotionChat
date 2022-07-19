@@ -6,7 +6,7 @@ import io from 'socket.io-client'
 import FontChanger from "./FontChanger";
 import EmotionSize from "./EmotionSize";
 
-const socket = io.connect('ws://127.0.0.1:3737');
+const socket = io.connect(process.env.REACT_APP_PATH);
 
 let run_video_camera = () => {
     let video = document.querySelector("#video");
