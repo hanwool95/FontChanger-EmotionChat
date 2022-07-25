@@ -7,6 +7,7 @@ import FontChanger from "./FontChanger";
 import EmotionSize from "./EmotionSize";
 
 const socket = io.connect(process.env.REACT_APP_PATH);
+const originalFont = 'Nanum Gothic';
 
 let run_video_camera = () => {
     let video = document.querySelector("#video");
@@ -32,7 +33,7 @@ let capture_video = (video) => {
 function App() {
     // useState를 활용하면 class 없이 상태와 set 선언 가능.
     const [state, setState] = useState({message:'', name:''})
-    const [fontName, setFontName] = useState('')
+    const [fontName, setFontName] = useState('Nanum Gothic')
     const [emotionDict, setEmotionDict] = useState('')
     const [chat,setChat] = useState([])
 
@@ -51,8 +52,8 @@ function App() {
 
     const activateFont = () => {
         let font = fontName
-        if (!!font) {
-            setFontName('')
+        if (font !== originalFont) {
+            setFontName(originalFont)
             return
         }
 
@@ -102,13 +103,13 @@ function App() {
         socket.emit('serverReceiver', {name, message, emotion, font})
 
         //초기화
-        setFontName('')
+        setFontName(originalFont)
         setState({message : '', name})
     }
 
     const renderButton = () => {
         let text
-        if (!!fontName){
+        if (fontName !== originalFont){
             text = "되돌리기"
         }
         else {
@@ -128,7 +129,7 @@ function App() {
     const renderChat = () =>{
         return chat.map(({name, message, emotion, font}, index)=>(
             <div key={index}>
-                <h3>{name}:<span style={{fontFamily:font, fontSize:EmotionSize[font]}}>{message}</span></h3>
+                <h3><span style={{fontFamily:originalFont, fontSize:EmotionSize[originalFont]}}>{name}</span>:<span style={{fontFamily:font, fontSize:EmotionSize[font]}}>{message}</span></h3>
             </div>
         ))
     }

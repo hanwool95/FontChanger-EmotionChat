@@ -1,11 +1,11 @@
 
 const EmothionSize ={
-    "Angry": 25,
-    "Scary": 18,
-    'Happy': 20,
-    "Sad": 20,
-    "Surprice": 17,
-    "Nanum Gothic": 18,
+    "Angry": 48,
+    "Scary": 38,
+    'Happy': 40,
+    "Sad": 40,
+    "Surprice": 34,
+    "Nanum Gothic": 33,
 }
 
 export default EmothionSize;
