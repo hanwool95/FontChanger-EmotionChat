@@ -41,7 +41,7 @@ function App() {
 
     useEffect(() =>{
         socket.on('clientReceiver', ({name, message, emotion, font})=>{
-            setChat([...chat,{name, message, emotion, font}])
+            setChat([{name, message, emotion, font}, ...chat])
             return () => socket.disconnect()
         })
     }, [ chat ])
@@ -129,7 +129,7 @@ function App() {
     const renderChat = () =>{
         return chat.map(({name, message, emotion, font}, index)=>(
             <div key={index}>
-                <h3><span style={{fontFamily:originalFont, fontSize:EmotionSize[originalFont]}}>{name}</span>:<span style={{fontFamily:font, fontSize:EmotionSize[font]}}>{message}</span></h3>
+                <span style={{fontFamily:originalFont, fontSize:EmotionSize[originalFont]}}>{name}:</span><span style={{fontFamily:font, fontSize:EmotionSize[font]}}>{message}</span>
             </div>
         ))
     }
@@ -137,7 +137,6 @@ function App() {
     return (
         <div className='card'>
             <div className="render-chat">
-                <h1>Chat log</h1>
                 {renderChat()}
             </div>
             <div className="video-box">
