@@ -5,30 +5,10 @@ import io from 'socket.io-client'
 
 import FontChanger from "./FontChanger";
 import EmotionSize from "./EmotionSize";
+import Video from "./Video";
 
 const socket = io.connect(process.env.REACT_APP_PATH);
 const originalFont = 'Nanum Gothic';
-
-let run_video_camera = () => {
-    let video = document.querySelector("#video");
-    if (navigator.mediaDevices.getUserMedia) {
-        navigator.mediaDevices.getUserMedia({ video: true })
-            .then(function (stream) {
-                video.srcObject = stream;
-            })
-            .catch(function (err0r) {
-                console.log("Something went wrong!");
-            });
-    }
-    return video
-}
-
-let capture_video = (video) => {
-    let canvas = document.querySelector("#canvas");
-    canvas.getContext('2d').drawImage(video, 0, 0, 200, 150);
-   	let image_data_url = canvas.toDataURL('image/jpeg');
-    return image_data_url
-}
 
 function App() {
     // useState를 활용하면 class 없이 상태와 set 선언 가능.
@@ -47,7 +27,7 @@ function App() {
     }, [ chat ])
 
     const activateVideo = () => {
-        video = run_video_camera()
+        video = Video.run_video_camera()
     }
 
     const activateFont = () => {
@@ -57,9 +37,9 @@ function App() {
             return
         }
 
-        video = run_video_camera()
+        video = Video.run_video_camera()
 
-        const captured_img = capture_video(video)
+        const captured_img = Video.capture_video(video)
         let splited_base64 = captured_img.split(",")
 
         let api_body = new FormData()
@@ -129,7 +109,8 @@ function App() {
     const renderChat = () =>{
         return chat.map(({name, message, emotion, font}, index)=>(
             <div key={index}>
-                <span style={{fontFamily:originalFont, fontSize:EmotionSize[originalFont]}}>{name}:</span><span style={{fontFamily:font, fontSize:EmotionSize[font]}}>{message}</span>
+                <span style={{fontFamily:originalFont, fontSize:EmotionSize[originalFont]}}>{name}:</span>
+                <span style={{fontFamily:font, fontSize:EmotionSize[font]}}>{message}</span>
             </div>
         ))
     }
