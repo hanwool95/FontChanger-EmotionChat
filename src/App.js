@@ -14,14 +14,13 @@ function App() {
     // useState를 활용하면 class 없이 상태와 set 선언 가능.
     const [state, setState] = useState({message:'', name:''})
     const [fontName, setFontName] = useState('Nanum Gothic')
-    const [emotionDict, setEmotionDict] = useState('')
     const [chat,setChat] = useState([])
 
     let video
 
     useEffect(() =>{
-        socket.on('clientReceiver', ({name, message, emotion, font})=>{
-            setChat([{name, message, emotion, font}, ...chat])
+        socket.on('clientReceiver', ({name, message, font})=>{
+            setChat([{name, message, font}, ...chat])
             return () => socket.disconnect()
         })
     }, [ chat ])
@@ -64,7 +63,6 @@ function App() {
         }).then(() =>{
             console.log("setting Font "+font)
             setFontName(font)
-            setEmotionDict(emotion)
         }
         )
 
@@ -77,10 +75,9 @@ function App() {
     const onMessageSubmit =(e)=>{
         e.preventDefault()
         let {name, message} = state
-        let emotion = emotionDict
         let font = fontName
 
-        socket.emit('serverReceiver', {name, message, emotion, font})
+        socket.emit('serverReceiver', {name, message, font})
 
         //초기화
         setFontName(originalFont)
