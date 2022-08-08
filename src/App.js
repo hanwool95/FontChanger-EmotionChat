@@ -99,7 +99,7 @@ function App() {
     const renderFont = () => {
         let message = state['message']
         return <div>
-            <span style={{fontFamily:fontName, fontSize:EmotionSize[fontName]}}>{message}</span>
+            <span style={{fontFamily:fontName}}>{message}</span>
         </div>
     }
 
